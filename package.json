@@ -1,0 +1,49 @@
+{
+  "name": "dsh-prompt-hub",
+  "version": "1.2.0",
+  "private": true,
+  "description": "Prompt hub for DeepSeek Harness: organize prompts by category, edit them in the sidebar, and insert them into the composer.",
+  "type": "module",
+  "engines": {
+    "node": ">=24.9.0",
+    "dsh": ">=0.2.2-rc.3 <0.3.0"
+  },
+  "scripts": {
+    "test": "node --test test/host.test.mjs"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "test/*.mjs",
+    "README.md"
+  ],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "prompt",
+    "prompt-hub",
+    "提示词"
+  ],
+  "license": "MIT",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": []
+    }
+  }
+}
