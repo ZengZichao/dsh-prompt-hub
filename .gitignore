@@ -1,6 +1,25 @@
 # macOS metadata
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes
 
-# Node dependencies
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node / package managers
 node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 *.log
+
+# Local environment and secrets
+.env
+.env.*
+*.local
+*.pem
+*.key

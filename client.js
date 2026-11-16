@@ -1108,7 +1108,7 @@ body[data-ds-dark-theme] .dsh-ph-composer {
             try {
               const parsed = JSON.parse(String(reader.result))
               const summary = summarizeImport(parsed)
-              setImportDraft({ raw: parsed, summary })
+              setImportDraft({ raw: parsed, summary, mode: 'merge' })
             } catch (importError) {
               flash(t('import.failed', { message: importError instanceof Error ? importError.message : String(importError) }))
             }
@@ -1367,14 +1367,14 @@ body[data-ds-dark-theme] .dsh-ph-composer {
               ),
               h('div', { className: 'dsh-ph-field' },
                 h('label', { className: 'dsh-ph-radio' },
-                  h('input', { type: 'radio', name: 'dsh-ph-import-mode', value: 'merge', defaultChecked: true }),
+                  h('input', { type: 'radio', name: 'dsh-ph-import-mode', value: 'merge', checked: importDraft.mode === 'merge', onChange: () => setImportDraft({ ...importDraft, mode: 'merge' }) }),
                   h('span', null,
                     h('span', { className: 'dsh-ph-radio-title' }, t('import.merge')),
                     h('span', { className: 'dsh-ph-radio-hint' }, t('import.mergeHint')),
                   ),
                 ),
                 h('label', { className: 'dsh-ph-radio' },
-                  h('input', { type: 'radio', name: 'dsh-ph-import-mode', value: 'replace' }),
+                  h('input', { type: 'radio', name: 'dsh-ph-import-mode', value: 'replace', checked: importDraft.mode === 'replace', onChange: () => setImportDraft({ ...importDraft, mode: 'replace' }) }),
                   h('span', null,
                     h('span', { className: 'dsh-ph-radio-title' }, t('import.replace')),
                     h('span', { className: 'dsh-ph-radio-hint' }, t('import.replaceHint')),
@@ -1386,8 +1386,7 @@ body[data-ds-dark-theme] .dsh-ph-composer {
                 h('button', {
                   type: 'button', className: 'dsh-ph-btn dsh-ph-btn-primary',
                   onClick: () => {
-                    const chosen = document.querySelector('input[name="dsh-ph-import-mode"]:checked')
-                    applyImport(chosen && chosen.value === 'replace' ? 'replace' : 'merge')
+                    applyImport(importDraft.mode === 'replace' ? 'replace' : 'merge')
                   },
                 }, t('import.action')),
               ),

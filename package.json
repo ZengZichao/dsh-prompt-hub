@@ -9,7 +9,7 @@
     "dsh": ">=0.2.2-rc.3 <0.3.0"
   },
   "scripts": {
-    "test": "node --test test/host.test.mjs"
+    "test": "node --test"
   },
   "exports": {
     ".": "./index.js",
@@ -25,7 +25,10 @@
     "locale/*.json",
     "icon.svg",
     "test/*.mjs",
-    "README.md"
+    "docs",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
   ],
   "keywords": [
     "dsh",
@@ -36,6 +39,12 @@
     "提示词"
   ],
   "license": "MIT",
+  "author": "ZengZichao",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZengZichao/dsh-prompt-hub.git"
+  },
+  "homepage": "https://github.com/ZengZichao/dsh-prompt-hub#readme",
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"

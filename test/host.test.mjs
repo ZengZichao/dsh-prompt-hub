@@ -10,10 +10,15 @@ import assert from 'node:assert/strict'
 import { promises as fs } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { test } from 'node:test'
+import { after, test } from 'node:test'
 import { apply, normalizeData } from '../index.js'
 
 const tempRoots = []
+
+// Runs after every test, so the throwaway $DSH_HOME directories never leak.
+after(async () => {
+  await Promise.all(tempRoots.map((root) => fs.rm(root, { recursive: true, force: true }).catch(() => {})))
+})
 
 /** A fresh `$DSH_HOME`, the plugin mounted on it, and its registrations. */
 async function makeCtx() {
@@ -46,12 +51,6 @@ async function makeCtx() {
   apply(ctx)
   return { ctx, registered, home, file, backupDir }
 }
-
-test('cleanup', async () => {
-  for (const root of tempRoots) {
-    await fs.rm(root, { recursive: true, force: true }).catch(() => {})
-  }
-})
 
 function request(method, body, origin) {
   return {

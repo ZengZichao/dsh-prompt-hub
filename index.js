@@ -288,7 +288,7 @@ function selectPrompts(data, options) {
   const pinnedOnly = options?.pinned === true
   const offset = Number.isFinite(options?.offset) ? Math.max(0, Math.floor(options.offset)) : 0
   let limit = Number.isFinite(options?.limit) ? Math.floor(options.limit) : DEFAULT_LIMIT
-  if (!Number.isFinite(limit) || limit <= 0) limit = DEFAULT_LIMIT
+  if (limit <= 0) limit = DEFAULT_LIMIT
   limit = Math.min(MAX_LIMIT, limit)
 
   const matches = []
@@ -492,22 +492,36 @@ function sendJson(response, status, payload) {
 function readJsonBody(request) {
   return new Promise((resolve, reject) => {
     let raw = ''
+    let settled = false
     request.setEncoding('utf8')
     request.on('data', (chunk) => {
+      if (settled) return
       raw += chunk
-      if (raw.length > MAX_BODY_BYTES) reject(new Error('request body too large'))
+      if (raw.length > MAX_BODY_BYTES) {
+        settled = true
+        reject(new Error('request body too large'))
+        // Stop pulling more of an oversized body into memory.
+        try { request.pause() } catch { /* streams without pause are still settled */ }
+      }
     })
     request.on('end', () => {
+      if (settled) return
+      settled = true
       if (raw.length === 0) return resolve({})
       try { resolve(JSON.parse(raw)) } catch { reject(new Error('invalid JSON')) }
     })
-    request.on('error', reject)
+    request.on('error', (error) => {
+      if (settled) return
+      settled = true
+      reject(error)
+    })
   })
 }
 
 export function apply(ctx) {
-  const file = path.join(resolveHome(ctx), DATA_DIR, DATA_FILE)
-  const backupDirectory = path.join(resolveHome(ctx), DATA_DIR, BACKUP_DIR)
+  const home = resolveHome(ctx)
+  const file = path.join(home, DATA_DIR, DATA_FILE)
+  const backupDirectory = path.join(home, DATA_DIR, BACKUP_DIR)
 
   /** Serialized writes: a later save never lands before an earlier one. */
   let writing = Promise.resolve()

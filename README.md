@@ -51,7 +51,10 @@ DeepSeek Harness 的提示词管理插件：把常用提示词按分类和标签
 | `locale/en.json`、`locale/zh.json` | 插件管理器里的标题与说明 |
 | `icon.svg` | 插件管理器图标 |
 | `test/host.test.mjs` | Host 半边测试 |
+| `test/client.test.mjs` | 浏览器半边冒烟测试 |
 | `docs/` | 帮助文档 |
+| `CHANGELOG.md` | 版本变更记录 |
+| `LICENSE` | MIT 许可证 |
 
 ## 开发
 
@@ -59,7 +62,7 @@ DeepSeek Harness 的提示词管理插件：把常用提示词按分类和标签
 npm test
 ```
 
-测试为每个用例创建独立的临时 `$DSH_HOME`，不会碰到真实提示词库。
+Host 半边测试为每个用例创建独立的临时 `$DSH_HOME`，不会碰到真实提示词库，跑完自动清理；浏览器半边为模块契约的冒烟测试，不需要 DOM。变更记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 许可
 
